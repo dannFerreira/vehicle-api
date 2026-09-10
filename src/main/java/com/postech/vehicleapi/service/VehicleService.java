@@ -5,6 +5,7 @@ import com.postech.vehicleapi.dto.UpdateVehicleRequest;
 import com.postech.vehicleapi.dto.VehicleResponse;
 import com.postech.vehicleapi.entity.Vehicle;
 import com.postech.vehicleapi.entity.VehicleStatus;
+import com.postech.vehicleapi.exception.VehicleNotFoundException;
 import com.postech.vehicleapi.repository.VehicleRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,6 +69,6 @@ public class VehicleService {
 
     private Vehicle findById(Long id) {
         return vehicleRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Vehicle not found"));
+                .orElseThrow(VehicleNotFoundException::new);
     }
 }
