@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: vehicle-api
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/vehicle_db
+    username: vehicle
+    password: vehicle
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  flyway:
+    enabled: true
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
