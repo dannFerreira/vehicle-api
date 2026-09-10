@@ -40,7 +40,7 @@ jobs:
           cache: maven
 
       - name: Run tests
-        run: ./mvnw test
+        run: bash mvnw test
 
       - name: Build application
-        run: ./mvnw package -DskipTests
+        run: bash mvnw package -DskipTests
