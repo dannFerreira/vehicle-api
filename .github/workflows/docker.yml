@@ -40,5 +40,5 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}:latest
-            ghcr.io/${{ github.repository }}:${{ github.sha }}
+            ghcr.io/dannferreira/vehicle-api:latest
+            ghcr.io/dannferreira/vehicle-api:${{ github.sha }}
