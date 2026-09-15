@@ -22,17 +22,16 @@ A solução permite cadastrar, editar, listar e comprar veículos, mantendo os d
 
 ## Arquitetura
 
+## Arquitetura
+
 A solução foi dividida em responsabilidades separadas:
 
-- `vehicle-api`: API e regras de negócio
-- `vehicle-auth`: autenticação e autorização utilizando Amazon Cognito
+- `vehicle-api`: API, regras de negócio, migrations, testes e CI/CD da aplicação
+- `vehicle-auth`: infraestrutura de autenticação e autorização utilizando Amazon Cognito
+- `vehicle-infra`: infraestrutura AWS da aplicação utilizando Terraform
 - PostgreSQL: armazenamento dos veículos e vendas
 - AWS EC2: execução da aplicação
 - GitHub Actions: CI/CD
-
-Os usuários e credenciais ficam armazenados no Amazon Cognito, separados do banco transacional da aplicação.
-
-A API recebe tokens JWT emitidos pelo Cognito e utiliza os grupos do usuário para autorização.
 
 ### Perfis
 
@@ -311,7 +310,9 @@ O pipeline de CI executa:
 - testes automatizados;
 - validação da aplicação.
 
-Após merge na branch `main`, o pipeline de CD:
+Após o merge na branch `main`, o CI executa novamente os testes e o build.
+
+Somente após a conclusão bem-sucedida do CI, o pipeline de CD é iniciado e:
 
 1. gera o arquivo `.jar`;
 2. conecta na instância AWS EC2;
@@ -325,6 +326,8 @@ Dessa forma, as alterações da aplicação são realizadas através de Pull Req
 
 A aplicação está hospedada na AWS.
 
+A infraestrutura da aplicação é representada como código no repositório `vehicle-infra`, utilizando Terraform.
+
 Na instância EC2 são executados containers Docker para:
 
 ```text
@@ -337,17 +340,20 @@ A autenticação é fornecida externamente pelo Amazon Cognito.
 Arquitetura simplificada:
 
 ```text
-              Amazon Cognito
-                    |
-                    | JWT
-                    v
-Client ------> Vehicle API
-                    |
-                    v
-               PostgreSQL
-                    ^
-                    |
-                 AWS EC2
+                    Amazon Cognito
+                          |
+                          | JWT
+                          v
+Client ------------> Vehicle API
+                          |
+                          v
+                     PostgreSQL
+                          ^
+                          |
+                       AWS EC2
+                          ^
+                          |
+                 Terraform / vehicle-infra
 ```
 
 ## Fluxo de compra
@@ -384,6 +390,15 @@ Contém:
 ### Vehicle Auth
 
 Contém a infraestrutura de autenticação e autorização utilizando Terraform e Amazon Cognito.
+
+### Vehicle Infra
+
+Contém a infraestrutura AWS da aplicação utilizando Terraform, incluindo:
+
+- instância EC2;
+- Security Group;
+- configurações de rede necessárias;
+- validação automatizada do Terraform através do GitHub Actions.
 
 ## Autor
 
