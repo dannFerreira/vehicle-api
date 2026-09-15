@@ -22,7 +22,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8081/realms/vehicle-store
+          issuer-uri: https://cognito-idp.us-east-2.amazonaws.com/us-east-2_8n2LHUg3r
 
 server:
   port: 8080

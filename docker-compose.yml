@@ -7,23 +7,22 @@ services:
       POSTGRES_DB: vehicle_db
       POSTGRES_USER: vehicle
       POSTGRES_PASSWORD: vehicle
-    ports:
-      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  keycloak:
-    image: quay.io/keycloak/keycloak:26.3
-    container_name: vehicle-keycloak
+  vehicle-api:
+    build: .
+    container_name: vehicle-api
     restart: unless-stopped
-    command: start-dev --import-realm
+    depends_on:
+      - postgres
     environment:
-      KC_BOOTSTRAP_ADMIN_USERNAME: admin
-      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/vehicle_db
+      SPRING_DATASOURCE_USERNAME: vehicle
+      SPRING_DATASOURCE_PASSWORD: vehicle
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://cognito-idp.us-east-2.amazonaws.com/us-east-2_8n2LHUg3r
     ports:
-      - "8081:8080"
-    volumes:
-      - ./keycloak:/opt/keycloak/data/import
+      - "8080:8080"
 
 volumes:
   postgres_data:
